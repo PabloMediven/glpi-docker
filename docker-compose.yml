@@ -1,0 +1,28 @@
+services:
+  # MariaDB Container
+  mariadb:
+    image: mariadb:10.7
+    container_name: mariadb
+    hostname: mariadb
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+    env_file:
+      - ./mariadb.env
+    restart: always
+
+  # GLPI Container
+  glpi:
+    image: diouxx/glpi
+    container_name: glpi
+    hostname: glpi
+    ports:
+      - "80:80"
+    volumes:
+      - ./glpi_data:/var/www/html/glpi
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TIMEZONE=Europe/Brussels
+    restart: always
+    depends_on:
+      - mariadb
